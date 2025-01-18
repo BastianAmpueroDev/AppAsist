@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title size="large">Alumnos de {{ curso?.nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="curso">
+    <ion-card-header>
+      <ion-card-title>{{ curso.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>ID: {{ curso.id }}</p>
+      <p>Código: {{ curso.codigo }}</p>
+      <p>Sección: {{ curso.seccion }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let alumno of alumnos">
+      <ion-label>
+        <h2>{{ alumno.nombre }}</h2>
+        <p *ngIf="alumno.presente" style="color: green;">Presente</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

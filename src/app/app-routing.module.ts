@@ -23,6 +23,15 @@ const routes: Routes = [
     path: 'asignatura-a',
     loadChildren: () => import('./asignatura-a/asignatura-a.module').then(m => m.AsignaturaAPageModule)
   },
+  {
+    path: 'alumnos',
+    loadChildren: () => import('./alumnos/alumnos.module').then(m => m.AlumnosPageModule)
+  },
+  {
+    path: 'confirmacion',
+    loadChildren: () => import('./confirmacion/confirmacion.module').then(m => m.ConfirmacionPageModule)
+  },
+  // otras rutas...
 ];
 
 @NgModule({

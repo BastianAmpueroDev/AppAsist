@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +10,7 @@ import { Router, NavigationExtras } from '@angular/router';
 export class HomePage implements OnInit {
   nombreDocente: any;
   fechaHoraActual: string = '';
+  nombreAlumno: string | undefined;
 
   cursos = [
       {id: 1, nombre: 'POO', codigo: 'APY1111', seccion: '010v'},
@@ -18,13 +19,16 @@ export class HomePage implements OnInit {
       {id: 4, nombre: 'JEE', codigo: 'APY4444', seccion: '013v'}         
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     this.nombreDocente = this.router.getCurrentNavigation()?.extras.state?.['nombre'];
     console.log(this.router.getCurrentNavigation()?.extras.state?.['apellido']);
     console.log(this.router.getCurrentNavigation()?.extras.state?.['edad']);
   }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.nombreAlumno = params['nombre'];
+    });
     this.actualizarFechaHora();
     setInterval(() => {
       this.actualizarFechaHora();
@@ -37,8 +41,7 @@ export class HomePage implements OnInit {
   }
 
   verDetalle(curso: any) {
-    curso.id
-    const navigationExtras: NavigationExtras = {
+    const navigationExtras = {
       queryParams: {
         id: curso.id,
         nombre: curso.nombre,
@@ -47,5 +50,17 @@ export class HomePage implements OnInit {
       }
     };
     this.router.navigate(['/asignatura-a'], navigationExtras);
+  }
+
+  verAlumnos(curso: any) {
+    const navigationExtras = {
+      queryParams: {
+        id: curso.id,
+        nombre: curso.nombre,
+        codigo: curso.codigo,
+        seccion: curso.seccion
+      }
+    };
+    this.router.navigate(['/alumnos'], navigationExtras);
   }
 }
