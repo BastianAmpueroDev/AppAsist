@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>QR</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="asignatura">
+    <ion-card-header>
+      <ion-card-title>{{ asignatura.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>ID: {{ asignatura.id }}</p>
+      <p>Profesor: {{ asignatura.profesor }}</p>
+      <p>Horario: {{ asignatura.horario }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid>
+    <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%;">
+      <ion-col size="auto">
+        <ion-img src="../../assets/icon/Commons_QR_code.png" alt="QR Code"></ion-img>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

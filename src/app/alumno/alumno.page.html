@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Alumno</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Fecha y Hora</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            {{ formattedDate }}
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-item lines="none">
+          <ion-icon slot="start" name="camera-outline" style="font-size: 48px;"></ion-icon>
+          <ion-label>Escanear el código QR</ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
