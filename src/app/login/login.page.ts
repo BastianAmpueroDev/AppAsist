@@ -1,9 +1,10 @@
-
 import { Component, OnInit } from '@angular/core';
 import { AlertController, IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthServiceService } from '../services/auth-service.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -21,29 +22,63 @@ export class LoginPage implements OnInit {
 
   validar: boolean = true;
 
-  constructor(private router: Router, private alertController: AlertController) { }
+  constructor(
+    private authservice: AuthServiceService,
+    private router: Router,
+    private alertController: AlertController,
+    private http: HttpClient
+  ) { }
 
   navegarExtras() {
-    let setData: NavigationExtras = {};
+    const user = this.usuario.value.user;
+    const pass = this.usuario.value.pass;
 
-    const loginMap: { [key: string]: string } = {
-      'prof:1234': '/home',
-      'estu:1234': '/alumno'
-    };
+    this.http.post('http://localhost:5000/login', { user, password: pass }).subscribe(
+      (response: any) => {
+        let setData: NavigationExtras = {
+          state: {
+            nombre: response.nombre,
+            apellido: 'Doe', // Example data
+            edad: 30 // Example data
+          }
+        };
 
-    const userPassKey = `${this.usuario.value.user}:${this.usuario.value.pass}`;
+        const loginMap: { [key: string]: string } = {
+          'docente': '/home',
+          'alumno': '/alumno'
+        };
 
-    if (loginMap[userPassKey]) {
-      this.router.navigate([loginMap[userPassKey]], setData);
-    } else {
-      this.alertController.create({
-        header: 'Error',
-        message: 'Credenciales inválidas',
-        buttons: ['OK']
-      }).then(alert => alert.present());
-    }
+        if (loginMap[response.user]) {
+          this.authservice.login();
+          this.router.navigate([loginMap[response.user]], setData);
+        } else {
+          this.alertController.create({
+            header: 'Error',
+            message: 'Credenciales inválidas',
+            buttons: ['OK']
+          }).then(alert => alert.present());
+        }
+      },
+      (error) => {
+        this.alertController.create({
+          header: 'Error',
+          message: 'Credenciales inválidas',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    );
   }
 
   ngOnInit() {
+    document.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', this.handleTouchMove, { passive: true });
+  }
+
+  handleTouchStart(event: TouchEvent) {
+    // Handle touch start event
+  }
+
+  handleTouchMove(event: TouchEvent) {
+    // Handle touch move event
   }
 }

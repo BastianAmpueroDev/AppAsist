@@ -10,7 +10,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule],
 })
 export class ConfirmacionPage implements OnInit {
-  nombreAlumno: string = '';
+  nombreAlumno!: string;
 
   constructor(private route: ActivatedRoute, private router: Router) { }
 
@@ -26,6 +26,6 @@ export class ConfirmacionPage implements OnInit {
         nombre: this.nombreAlumno
       }
     };
-    this.router.navigate(['/home'], navigationExtras);
+    this.router.navigate(['/asignatura-alumno'], navigationExtras);
   }
 }

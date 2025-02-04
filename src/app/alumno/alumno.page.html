@@ -25,11 +25,19 @@
           <ion-icon slot="start" name="camera-outline" style="font-size: 48px;"></ion-icon>
           <ion-label>Escanear el código QR</ion-label>
         </ion-item>
-        <ion-button (click)="simularEscaneoQR()">Simular Escaneo QR</ion-button>
+        <ion-button *ngIf="!scanning" (click)="scanQRCode()">Escanear Código QR</ion-button>
+        <ion-button *ngIf="scanning" (click)="stopScanning()">Cancelar Escaneo</ion-button>
         <ion-item *ngIf="asistenciaConfirmada" lines="none">
           <ion-icon slot="start" name="checkmark-circle-outline" style="font-size: 48px; color: green;"></ion-icon>
           <ion-label>Asistencia Confirmada</ion-label>
         </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-center" *ngIf="scanning">
+      <ion-col size="auto">
+        <div id="camera-preview" style="width: 300px; height: 300px; border: 2px solid black;"></div>
+        <ion-button (click)="captureImage()">Tomar Foto</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

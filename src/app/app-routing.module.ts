@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { guardsGuard } from './guard/guards.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +32,18 @@ const routes: Routes = [
     path: 'confirmacion',
     loadChildren: () => import('./confirmacion/confirmacion.module').then(m => m.ConfirmacionPageModule)
   },
-  // otras rutas...
+  {
+    path: 'asignatura-alumno',
+    loadChildren: () => import('./asignatura-alumno/asignatura-alumno.module').then(m => m.AsignaturaAlumnoPageModule)
+  },
+  {
+    path: 'page404',
+    loadChildren: () => import('./page404/page404.module').then(m => m.Page404PageModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'page404'
+  }
 ];
 
 @NgModule({
@@ -41,3 +53,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+

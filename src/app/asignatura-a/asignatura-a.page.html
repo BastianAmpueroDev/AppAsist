@@ -13,6 +13,12 @@
       <p>ID: {{ asignatura.id }}</p>
       <p>Profesor: {{ asignatura.profesor }}</p>
       <p>Horario: {{ asignatura.horario }}</p>
+      <ion-list>
+        <ion-item *ngFor="let alumno of asignatura.alumnos">
+          <ion-label>{{ alumno.nombre }}</ion-label>
+          <ion-badge [color]="alumno.estatus === 'Presente' ? 'success' : 'danger'">{{ alumno.estatus }}</ion-badge>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 

@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConsumoAPIService } from '../services/consumo-api.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
   standalone: false,
 })
 export class HomePage implements OnInit {
   nombreDocente: any;
   fechaHoraActual: string = '';
-  nombreAlumno: string | undefined;
+  nombreAlumno!: string;
+  message: string = '';
+  cursos: any[] = [];
 
-  cursos = [
-      {id: 1, nombre: 'POO', codigo: 'APY1111', seccion: '010v'},
-      {id: 2, nombre: 'LAA', codigo: 'APY2222', seccion: '011v'},
-      {id: 3, nombre: 'SEE', codigo: 'APY3333', seccion: '012v'},
-      {id: 4, nombre: 'JEE', codigo: 'APY4444', seccion: '013v'}         
-  ];
-
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private consumoApi: ConsumoAPIService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) {
     this.nombreDocente = this.router.getCurrentNavigation()?.extras.state?.['nombre'];
     console.log(this.router.getCurrentNavigation()?.extras.state?.['apellido']);
     console.log(this.router.getCurrentNavigation()?.extras.state?.['edad']);
@@ -33,6 +34,31 @@ export class HomePage implements OnInit {
     setInterval(() => {
       this.actualizarFechaHora();
     }, 1000);
+
+    document.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', this.handleTouchMove, { passive: true });
+
+    this.consumoApi.obtenerCursos().subscribe(cursos => {
+      this.cursos = cursos;
+    });
+  }
+
+  handleTouchStart(event: TouchEvent) {
+    // Handle touch start event
+  }
+
+  handleTouchMove(event: TouchEvent) {
+    // Handle touch move event
+  }
+
+  mostrar() {
+    this.consumoApi.getPosts().subscribe((res) => {
+      this.message = '' + res[0].title;
+      console.log(res[0].title);
+      this.cdr.detectChanges();
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   actualizarFechaHora() {
