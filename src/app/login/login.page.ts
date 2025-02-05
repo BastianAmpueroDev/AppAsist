@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
-import { Router, NavigationExtras } from '@angular/router';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthServiceService } from '../services/auth-service.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,8 +9,6 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone: true,
-  imports: [IonicModule, RouterModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
 
@@ -19,8 +16,6 @@ export class LoginPage implements OnInit {
     user: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
     pass: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
   });
-
-  validar: boolean = true;
 
   constructor(
     private authservice: AuthServiceService,
@@ -30,55 +25,55 @@ export class LoginPage implements OnInit {
   ) { }
 
   navegarExtras() {
-    const user = this.usuario.value.user;
-    const pass = this.usuario.value.pass;
+    const user = "Alumno";
+    const pass = "12345";
 
-    this.http.post('http://localhost:5000/login', { user, password: pass }).subscribe(
+    // Realizamos la petición a la API para validar el login
+    this.authservice.authenticateUser(user, pass).subscribe(
       (response: any) => {
-        let setData: NavigationExtras = {
-          state: {
-            nombre: response.nombre,
-            apellido: 'Doe', // Example data
-            edad: 30 // Example data
+        if (response && response.user) {
+          // Guardamos la información del usuario
+          this.authservice.setUserData(response);
+
+          let setData = {
+            state: {
+              nombre: response.nombre,
+              apellido: response.apellido,
+              edad: response.edad,
+              role: response.role
+            }
+          };
+
+          // Asignar la ruta según el rol del usuario
+          const loginMap: { [key: string]: string } = {
+            'docente': '/home',
+            'alumno': '/alumno'
+          };
+
+          if (loginMap[response.role]) {
+            this.authservice.login();
+            this.router.navigate([loginMap[response.role]], setData);
+          } else {
+            this.showErrorAlert();
           }
-        };
-
-        const loginMap: { [key: string]: string } = {
-          'docente': '/home',
-          'alumno': '/alumno'
-        };
-
-        if (loginMap[response.user]) {
-          this.authservice.login();
-          this.router.navigate([loginMap[response.user]], setData);
         } else {
-          this.alertController.create({
-            header: 'Error',
-            message: 'Credenciales inválidas',
-            buttons: ['OK']
-          }).then(alert => alert.present());
+          this.showErrorAlert();
         }
       },
       (error) => {
-        this.alertController.create({
-          header: 'Error',
-          message: 'Credenciales inválidas',
-          buttons: ['OK']
-        }).then(alert => alert.present());
+        this.showErrorAlert();
       }
     );
   }
 
-  ngOnInit() {
-    document.addEventListener('touchstart', this.handleTouchStart, { passive: true });
-    document.addEventListener('touchmove', this.handleTouchMove, { passive: true });
+  // Función para mostrar una alerta de error
+  showErrorAlert() {
+    this.alertController.create({
+      header: 'Error',
+      message: 'Credenciales inválidas',
+      buttons: ['OK']
+    }).then(alert => alert.present());
   }
 
-  handleTouchStart(event: TouchEvent) {
-    // Handle touch start event
-  }
-
-  handleTouchMove(event: TouchEvent) {
-    // Handle touch move event
-  }
+  ngOnInit() {}
 }
